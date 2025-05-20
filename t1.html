@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>睡眠模式進度條</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #1a1a1a;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .bar-container {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin: 30px auto;
+    }
+
+    .bar-segment {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      background-color: green;
+      transition: background-color 0.3s, opacity 0.3s;
+    }
+
+    .yellow {
+      background-color: gold;
+    }
+
+    .red {
+      background-color: crimson;
+    }
+
+    .bar-off {
+      background-color: #444;
+    }
+
+    .done-message {
+      font-size: 20px;
+      color: lightcoral;
+      display: none;
+      margin-top: 20px;
+    }
+
+    .blink {
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    #countdownTotal {
+      font-size: 24px;
+      margin-top: 20px;
+    }
+
+    button {
+      background-color: #444;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #666;
+    }
+
+    .bottom-controls {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bar-container" id="barContainer"></div>
+
+  <div class="bottom-controls">
+    <div id="countdownTotal">剩餘時間：30:00</div>
+    <button id="toggleCountdown">切換倒數時間顯示</button>
+  </div>
+
+  <div class="done-message" id="doneMessage">📴 手機使用超時，將立即鎖機 30 分鐘</div>
+
+  <script>
+    const totalMinutes = 30;
+    const totalSeconds = totalMinutes * 60;
+    const segments = 10;
+    const intervalSeconds = totalSeconds / segments;
+
+    const barContainer = document.getElementById("barContainer");
+    const doneMessage = document.getElementById("doneMessage");
+    const countdownText = document.getElementById("countdownTotal");
+    const toggleBtn = document.getElementById("toggleCountdown");
+
+    let showCountdown = true;
+    let remainingTime = totalSeconds;
+    let currentSegment = 0;
+
+    // 產生進度條格子
+    for (let i = 0; i < segments; i++) {
+      const seg = document.createElement("div");
+      seg.classList.add("bar-segment");
+      barContainer.appendChild(seg);
+    }
+
+    const allSegments = document.querySelectorAll(".bar-segment");
+
+    toggleBtn.addEventListener("click", () => {
+      showCountdown = !showCountdown;
+      countdownText.style.display = showCountdown ? "block" : "none";
+    });
+
+    const updateCountdownDisplay = () => {
+      const mins = Math.floor(remainingTime / 60);
+      const secs = remainingTime % 60;
+      countdownText.textContent = `剩餘時間：${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const timer = setInterval(() => {
+      remainingTime--;
+
+      updateCountdownDisplay();
+
+      if (remainingTime % intervalSeconds === 0 && currentSegment < segments) {
+        allSegments[currentSegment].classList.add("bar-off");
+        currentSegment++;
+
+        const remainingSegments = segments - currentSegment;
+
+        allSegments.forEach((seg, i) => {
+          seg.classList.remove("yellow", "red", "blink");
+          if (i >= currentSegment) {
+            if (remainingSegments <= 3) seg.classList.add("red");
+            else if (remainingSegments <= 6) seg.classList.add("yellow");
+          }
+        });
+
+        if (remainingSegments === 1) {
+          allSegments[segments - 1].classList.add("red", "blink");
+        }
+      }
+
+      if (remainingTime <= 0) {
+        clearInterval(timer);
+        countdownText.style.display = "none";
+        allSegments[segments - 1].classList.remove("blink");
+        doneMessage.style.display = "block";
+      }
+    }, 1000);
+
+    updateCountdownDisplay(); // 初始時間顯示
+  </script>
+
+</body>
+</html>
+
