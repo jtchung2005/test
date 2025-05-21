@@ -98,14 +98,14 @@
   <div class="bar-container" id="barContainer"></div>
 
   <div class="bottom-controls">
-    <div id="countdownTotal">剩餘時間：5:00</div>
+    <div id="countdownTotal">剩餘時間：1:00</div>
     <button id="toggleCountdown">切換倒數時間顯示</button>
   </div>
 
-  <div class="done-message" id="doneMessage">📴 手機使用超時，將立即鎖機 30 分鐘</div>
+  <div class="done-message" id="doneMessage">📴 手機使用超時，檯燈關閉，手機將立即鎖機 30 分鐘</div>
 
   <script>
-    const totalMinutes = 5;
+    const totalMinutes = 1;
     const totalSeconds = totalMinutes * 60;
     const segments = 10;
     const intervalSeconds = totalSeconds / segments;
