@@ -3,26 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <title>睡眠模式進度條</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: sans-serif;
       background-color: #1a1a1a;
       color: white;
-      text-align: center;
-      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      height: 100vh;
+      box-sizing: border-box;
     }
 
     .bar-container {
       display: flex;
       justify-content: center;
-      gap: 5px;
-      margin: 30px auto;
+      flex-wrap: nowrap;
+      gap: 10px;
+      margin: 20px auto;
     }
 
     .bar-segment {
-      width: 30px;
-      height: 30px;
-      border-radius: 6px;
+      width: 6vw;
+      height: 6vw;
+      max-width: 60px;
+      max-height: 60px;
+      border-radius: 8px;
       background-color: green;
       transition: background-color 0.3s, opacity 0.3s;
     }
@@ -40,10 +49,11 @@
     }
 
     .done-message {
-      font-size: 20px;
+      font-size: 1.4rem;
       color: lightcoral;
       display: none;
       margin-top: 20px;
+      text-align: center;
     }
 
     .blink {
@@ -56,8 +66,8 @@
     }
 
     #countdownTotal {
-      font-size: 24px;
-      margin-top: 20px;
+      font-size: 1.5rem;
+      margin: 10px 0;
     }
 
     button {
@@ -65,7 +75,8 @@
       color: white;
       border: none;
       padding: 10px 20px;
-      margin-top: 10px;
+      margin-top: 8px;
+      font-size: 1rem;
       border-radius: 6px;
       cursor: pointer;
     }
@@ -75,7 +86,10 @@
     }
 
     .bottom-controls {
-      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -84,14 +98,14 @@
   <div class="bar-container" id="barContainer"></div>
 
   <div class="bottom-controls">
-    <div id="countdownTotal">剩餘時間：30:00</div>
+    <div id="countdownTotal">剩餘時間：5:00</div>
     <button id="toggleCountdown">切換倒數時間顯示</button>
   </div>
 
   <div class="done-message" id="doneMessage">📴 手機使用超時，將立即鎖機 30 分鐘</div>
 
   <script>
-    const totalMinutes = 30;
+    const totalMinutes = 5;
     const totalSeconds = totalMinutes * 60;
     const segments = 10;
     const intervalSeconds = totalSeconds / segments;
@@ -105,7 +119,7 @@
     let remainingTime = totalSeconds;
     let currentSegment = 0;
 
-    // 產生進度條格子
+    // 建立進度格
     for (let i = 0; i < segments; i++) {
       const seg = document.createElement("div");
       seg.classList.add("bar-segment");
@@ -157,7 +171,7 @@
       }
     }, 1000);
 
-    updateCountdownDisplay(); // 初始時間顯示
+    updateCountdownDisplay();
   </script>
 
 </body>
